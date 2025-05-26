@@ -29,12 +29,13 @@ public class Q2<Item> {
                 }
             }
             else while(current.next != null){
-                    if(count + 1 == start) st = current;
-                    else if(count == end){
+                    count++;
+                    if(count == start) st = current;
+                    else if(count -1 == end){
                         st.next = current.next;
                         break;
                     }
-                    count++;
+                    current = current.next;
                 }
         }
     }

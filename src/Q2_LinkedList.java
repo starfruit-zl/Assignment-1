@@ -25,15 +25,18 @@ public class Q2_LinkedList<Item> {
     /**A method that changes the last pointer node to null to remove it from the list.
      * If the header is the only node, it sets the head to null.
      */
-    public void peel(){
-        Node<Item> peeled = head;
+    public Item peel(){
+        Node<Item> peeled = head, takeOff;
         if (peeled.next == null) head = null;
         else{
             while ((peeled.next).next != null){
                 peeled = peeled.next;
-            }  
+            }
+            takeOff = peeled.next;
             peeled.next = null;
+            return takeOff.item;
         }
+        return null;
     }
 
     /**A method that prints the full contents of the linked-list for all its defined values.
