@@ -11,14 +11,6 @@ import javax.swing.JOptionPane;
      */
 public class Q1 {
     /**
-    A null constructor that defines a private string to be processed by requesting
-    user input.
-     */
-    public Q1(){
-        str = JOptionPane.showInputDialog("Input a sequence of operations with only \"(\".");
-    }
-
-    /**
      * 
      * A constructor that defines a private string to be processed by recieving a string as input.
      * @param str1 the string input to be processed.
@@ -32,33 +24,41 @@ public class Q1 {
      * @return the string with the missing ( added.
      */
     public String fix() {
-        String modifiedStr = str;
-        int count = 0;
 
-        for (int i = 0; i < str.length(); i++)
-            if (')' == str.charAt(i)) count++;
-
-        int[] indexLast = new int [count];
-        int tierEval = 0;
-        //logic: if another encountered following, increase tier.
-        for (int i = 0; i < modifiedStr.length(); i++){
-            //logic: track the instances for each tier of brackets. Place at the position where the index - the instances since the last tiered bracket.
-            //       if the character at i is a star symbol, place the completing bracket to its right.
-            if (')' == modifiedStr.charAt(i)){
-                if ('*' == modifiedStr.charAt(i-indexLast[tierEval])) modifiedStr = modifiedStr.substring(0, i + 1 - indexLast[tierEval]) + "(" + modifiedStr.substring(i + 1 - indexLast[tierEval], modifiedStr.length());
-                else modifiedStr = modifiedStr.substring(0, i - indexLast[tierEval]) + "(" + modifiedStr.substring(i - indexLast[tierEval], modifiedStr.length());
-                indexLast[tierEval] = 0;
-                tierEval++;
-                i++;
+        Q1_Stack<String> terms = new Q1_Stack<String>(null);
+        Q1_Stack<String> operators = new Q1_Stack<String>(null);
+        for(int i = 0; i < str.length(); i++){
+            if(str.charAt(i) == '(') ;
+            else if (str.charAt(i) == '+' || str.charAt(i) == '-') operators.push(String.valueOf(str.charAt(i)));
+            else if (str.charAt(i) == '*' || str.charAt(i) == '/') operators.push(String.valueOf(str.charAt(i)));
+            else if (str.charAt(i) == ')'){
+                String operator = operators.pop();
+                String term2 = terms.pop(), term1 = terms.pop();
+                terms.push("("+term1+operator+term2+")");
             }
-            else{
-                for(int j = 0; j < count; j++)
-                    indexLast[j] += 1;
-                tierEval = 0;
-            }
+            else terms.push(String.valueOf(str.charAt(i)));
         }
         
-        return modifiedStr;
+        return terms.pop();
+    }
+
+    public class Q1_Stack<Item>{
+        public Q1_Stack(Item item1){
+            head = new Node<Item>(item1, null);
+        }
+
+        public void push(Item item1){
+            Node<Item> oldHead = head;
+            head = new Node<Item>(item1, oldHead);
+        }
+
+        public Item pop(){
+            Item popItem = head.item;
+            head = head.next;
+            return popItem;
+        }
+
+        private Node<Item> head;
     }
 
     /**
